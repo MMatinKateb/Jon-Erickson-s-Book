@@ -58,5 +58,45 @@ int find_user_note(int fd, int user_id) {
     unsigned char byte;
     int length;
 
-    while(note_uid != user_id)
+    while(note_uid != user_id) {    // Loop until a note for user_uid is found.
+        if (read(fd, &note_uid, 4) != 4)    // Read the uid data
+            return -1;
+        if (read(fd, &byte, 1) != 1)    // Read the newline separator.
+            return -1;
+
+        byte = length = 0;
+        while (byte != '\n') {  // Figure out how many bytes to the end of line.
+            if (read(fd, &byte, 1) != 1)    // Read a single byte.
+                return -1;
+            length++;
+        }
+    }
+    lseek(fd, length * -1, SEEK_CUR);   // Rewind files reading by length bytes.
+
+    printf("[DEBUG] found a %d byte note for user id %d\n", length, note_uid);
+    return length;
+}
+
+// A function to search a note for a given keyword;
+// returns 1 if a match is found, 0 if there is no match.
+int search_note(char *note, char *keyword) {
+    int i, keyword_length, match = 0;
+
+    keyword_length = strlen(keyword);
+    if (keyword_length == 0)    // If there is no search string
+        return 1;               // always "match".
+
+    for (i=0; i<strlen(note); i++) {    // Iterate over bytes in note.
+        if (note[i] == keyword[match])  // If byte matches keyword,
+            match++;                    // Get ready to check the next byte;
+        else {                          // Otherwise
+            if (note[i] == keyword[0])  // If that byte matches first keyword byte,
+                match = 1;              // start the match count at 1.
+            else                        
+                match = 0;              // Otherwise it is zero.    
+        }
+        if (match == keyword_length)    // If there is a full match,
+            return 1;                   // return matched.
+    }
+    return 0;                           // return not matched
 }
