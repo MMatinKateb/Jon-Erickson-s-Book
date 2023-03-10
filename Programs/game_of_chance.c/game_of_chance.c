@@ -180,4 +180,25 @@ void show_highscore() {
     printf("===========================================\n\n");
 }
 
-// ...
+// This function simply awards the jackpot for the Pick a Number game.
+void jackpot() {
+    printf("*+*+*+*+*+* JACKPOT *+*+*+*+*+*\n");
+    printf("You have won the jackpot of 100 credits!\n");
+    player.credits += 10;
+}
+
+// This function is used to input the player name, since
+// scanf("%s", &whatever) will stop input at the first space.
+void input_name() {
+    char *name_ptr, input_char = '\n';
+    while (input_char == '\n')      // Flush any leftover
+        scanf("%c", &input_char);   // newline chars.
+
+    name_ptr = (char *) &(player.name); // name_ptr = player name's address
+    while (input_char != '\n') {    // Loop until newline.
+        *name_ptr = input_char;     // Put the input_char into name field.
+        scanf("%c", &input_char);   // Get the next char.
+        name_ptr++;
+    }
+    *name_ptr = 0;  // Terminate the string.
+}
