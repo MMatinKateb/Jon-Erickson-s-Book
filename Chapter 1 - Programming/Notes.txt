@@ -1,0 +1,34 @@
+compile the source code using gcc:
+    $ gcc firstprog.c
+    $ ls -l a.out
+
+run the compiled file:
+    $ ./a.out
+
+using objdump tool to display file info in machine & asm instructions (main function):
+    $ objdump -D a.out | grep -A20 main.:   // display the first 20 lines of instructions in main
+
+change the asm syntax to intel on objdump:
+    $ objdump -M intel -D a.out | grep -A20 main.:      // -M intel for switching into intel syntax
+
+using GNU debugger tool:
+    $ gdb -q ./a.out
+    (gdb) break main        // execution will stop right before our code is executed
+    (gdb) run               // start the program to execute before breakpoint(main)
+    (gdb) registers info    // display all processor registers and their current states
+    (gdb) quit              // quit the debugger tool
+
+processor registers in intel syntax:
+    EAX -> Accumalator
+    ECX -> Counter
+    EDX -> Data
+    EBX -> Base
+
+    ESP -> Stack Pointer
+    EBP -> Base Pointer
+    ESI -> Source Index
+    EDI -> Destination Index
+
+    EIP -> Instruction Pointer
+
+    EFLAGS -> consists of a several bit flags used for comparison & mem segmentation
